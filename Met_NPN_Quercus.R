@@ -79,7 +79,7 @@ nrow(sites[sites$n.spp>1,]) #125 sites have 2 or more species observed (that's g
 # ------------------------------------------------------------------------------------------------------
 source("functions/extract_Daymet.R")
 download.Daymet(outfolder="data/Daymet_Quercus", start_date="1980-01-01", end_date="2015-12-31", 
-                site_id=sites$SiteID, lat.in=sites$Latitude, lon.in=sites$Longitude,
+                site_id=sites$SiteID[1:10], lat.in=sites$Latitude[1:10], lon.in=sites$Longitude[1:10],
                 vars=c("dayl", "prcp", "srad", "swe", "tmax", "tmin", "vp"),
                 overwrite = T, verbose = FALSE) 
 # ------------------------------------------------------------------------------------------------------

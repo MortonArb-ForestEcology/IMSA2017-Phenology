@@ -204,8 +204,6 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
           # Note the additional index for multiple sites
           dat.list[[paste(site_id[k])]][[j]] <- ncvar_get(dap, as.character(var$DAP.name[j]), start=c(x.ind[k],y.ind[k],1), c(1,1,ntime))
           
-          test.days <- dap$dim$time$vals
-          test <- ncvar_get(dap, as.character(var$DAP.name[j]), start=c(x.ind[k],y.ind[k],1), c(1,1,365))
           var.list[[paste(site_id[k])]][[j]] <- ncvar_def(name = as.character(var$CF.name[j]), 
                                                    units = as.character(var$units[j]), 
                                                    dim = dim, 
@@ -241,7 +239,7 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
       } # end points vs area
       
       ncdf4::nc_close(dap)
-        
+      pb.index=pb.index+1 # advance our status bar 
     } # end vars
       
     ## put data in new file
