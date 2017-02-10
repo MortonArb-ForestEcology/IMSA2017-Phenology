@@ -34,6 +34,21 @@ library(stringr)
 sites.spp <- read.csv("data/aggregate_npn_oaks.csv")
 summary(sites.spp)
 
+# Making a dummy data frame for Morton, using a single lat/lon for the whole site 
+# (which is not necessarily accurate)
+morton.spp <- data.frame(Longitude = -88.064340,
+                         Latitude = 42.81560,
+                         Genus = "Quercus",
+                         Species = c("alba", "bicolor", "coccinea", "ellipsoidalis", "falcata", "imbricaria",
+                                     "macrocarpa", "marilandica", "michauxii", "montana", "muehlenbergii",
+                                     "palustris", "prinoides", "rubra", "shumardii", "stellata", "velutina")
+                         )
+
+# Adding Morton species list to sites.spp via a merge because my columns don't line up exactly 
+# (if they did, we could use rbind)
+sites.spp <- merge(sites.spp, morton.spp, all=T)
+summary(sites.spp)
+
 # Finding unique sites
 # I know I asked for things by species, but if there are multiple species to a site, it doens't
 # make sense to do the met extraction more than once
@@ -46,6 +61,7 @@ summary(sites)
 
 # Note: 1 site has no lat/lon and so it's not really useful, so we're going to remove it
 sites <- sites[sites$Latitude>0,]
+sites$SiteID <- as.factor(paste0("Quercus", str_pad(1:nrow(sites), nchar(nrow(sites)), pad="0")))
 summary(sites)
 
 # Seeing how many sites this leaves us
@@ -53,13 +69,19 @@ nrow(sites) # 742 sites!  That's a ton!
 
 # Out of curiosity, finding what sites have multiple oak species
 nrow(sites[sites$n.spp>1,]) #125 sites have 2 or more species observed (that's great!)
+# Morton wins with 17 species, but we kind of cheat because we plant and are using a 
+# single lat/lon for the whole pace
 # ------------------------------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------------------------------
 # 2. Extract daily mean temperature from Daymet 
 #    (using Daymet so we get day length & not just tmean)
 # ------------------------------------------------------------------------------------------------------
-
+source("functions/extract_Daymet.R")
+download.Daymet(outfolder="data/Daymet_Quercus", start_date="1980-01-01", end_date="2015-12-31", 
+                site_id=sites$SiteID, lat.in=sites$Latitude, lon.in=sites$Longitude,
+                vars=c("dayl", "prcp", "srad", "swe", "tmax", "tmin", "vp"),
+                overwrite = T, verbose = FALSE) 
 # ------------------------------------------------------------------------------------------------------
 
 
