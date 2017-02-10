@@ -96,7 +96,7 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
    # https://thredds.daac.ornl.gov/thredds/catalog/ornldaac/1328/catalog.html
   dap_base <- "https://thredds.daac.ornl.gov/thredds/dodsC/ornldaac/1328/"
   
-  dir.create(outfolder, showWarnings = FALSE, recursive = TRUE)
+  if(!dir.exists(outfolder)) dir.create(outfolder, showWarnings = FALSE, recursive = TRUE)
   
   ylist <- seq(start_year, end_year, by = 1)
   rows <- length(ylist)
@@ -210,8 +210,8 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
                                                    missval = -999,
                                                    verbose = verbose)
           # Doing unit conversions
-          if(var$units[j]=="Kelvin") dat.list[[site_id[k]]][[j]] <- dat.list[[site_id[k]]][[j]]+273.15
-          if(var$units[j] %in% c("mm/s", "kg/m2/s")) dat.list[[site_id[k]]][[j]] <- dat.list[[site_id[k]]][[j]]/(60*60*24)
+          if(var$units[j]=="Kelvin") dat.list[[paste(site_id[k])]][[j]] <- dat.list[[paste(site_id[k])]][[j]]+273.15
+          if(var$units[j] %in% c("mm/s", "kg/m2/s")) dat.list[[paste(site_id[k])]][[j]] <- dat.list[[paste(site_id[k])]][[j]]/(60*60*24)
           
           pb.index=pb.index+1 # advance our status bar   
           }
