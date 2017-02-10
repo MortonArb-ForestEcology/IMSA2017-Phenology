@@ -213,6 +213,7 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
           if(var$units[j]=="Kelvin") dat.list[[site_id[k]]][[j]] <- dat.list[[site_id[k]]][[j]]+273.15
           if(var$units[j] %in% c("mm/s", "kg/m2/s")) dat.list[[site_id[k]]][[j]] <- dat.list[[site_id[k]]][[j]]/(60*60*24)
           
+          pb.index=pb.index+1 # advance our status bar   
           }
           
       } else {
@@ -236,16 +237,17 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
         if(var$units[j]=="Kelvin") dat.list[[j]] <- dat.list[[j]]+273.15
         if(var$units[j] %in% c("mm/s", "kg/m2/s")) dat.list[[j]] <- dat.list[[j]]/(60*60*24)
         
+        pb.index=pb.index+1 # advance our status bar   
       } # end points vs area
       
       ncdf4::nc_close(dap)
-      pb.index=pb.index+1 # advance our status bar 
+      
     } # end vars
       
     ## put data in new file
     for(k in 1:length(site_id)){
       out.site <- file.path(outfolder, site_id[k])
-      dir.create(out.site, showWarnings = T, recursive = TRUE)
+      if(!dir.exists(out.site)) dir.create(out.site, showWarnings = T, recursive = TRUE)
       
       loc.file <- file.path(out.site, paste("Daymet", year, "nc", sep = "."))
       
