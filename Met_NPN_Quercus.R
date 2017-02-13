@@ -82,9 +82,14 @@ nrow(sites[sites$n.spp>1,]) #125 sites have 2 or more species observed (that's g
 # ------------------------------------------------------------------------------------------------------
 source("functions/extract_Daymet.R")
 
-site.bins <- seq(21, nrow(sites), by=10)
+sites <- sites[order(sites$SiteID),]
+# head(sites)
+# summary(sites)
+
+
+site.bins <- seq(1, nrow(sites), by=10)
 for(i in 1:length(site.bins)){
-	if(i<length(site.bins)){
+	if(i<length(site.bins)){ 
 		sites.now <- site.bins[i]:(site.bins[i+1]-1)
 	} else {
 		sites.now <- site.bins[i]:nrow(sites)

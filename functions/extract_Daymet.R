@@ -64,7 +64,7 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
     pts.ll <- data.frame(lon=lon.in, lat=lat.in, site=site_id)
     pts.ll <- SpatialPointsDataFrame(coords=pts.ll[,c("lon", "lat")], data=pts.ll, proj4string=CRS("+proj=longlat"))
     
-    pts.lcc <- spTransform(pts.ll, CRS("+init=epsg:26978"))
+    pts.lcc <- spTransform(pts.ll, CRS("+proj=lcc +lat_1=25 +lat_2=60 +lat_0=42.5 +lon_0=-100 +datum=WGS84"))
     # summary(pts.lcc)
     
     # If you ever need a demo of the difference in projections:
