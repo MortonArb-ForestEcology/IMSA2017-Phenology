@@ -267,7 +267,7 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
       # results$formatname[i] <- "CF Meteorology"
   }
   
-  return(invisible(results))
+  # return(invisible(results))
 } # download.Daymet
 
 

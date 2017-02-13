@@ -62,10 +62,13 @@ summary(sites)
 # Note: 1 site has no lat/lon and so it's not really useful, so we're going to remove it
 sites <- sites[sites$Latitude>0,]
 sites$SiteID <- as.factor(paste0("Quercus", str_pad(1:nrow(sites), nchar(nrow(sites)), pad="0")))
+
+# Give Morton a special tag
+sites$SiteID <- as.factor(ifelse(sites$Latitude==unique(morton.spp$Latitude) & sites$Longitude==unique(morton.spp$Longitude),"MortonArb", paste(sites$SiteID))) 
+# Seeing how many sites this leaves us
 summary(sites)
 
-# Seeing how many sites this leaves us
-nrow(sites) # 742 sites!  That's a ton!
+nrow(sites) # 743 sites!  That's a ton!
 
 # Out of curiosity, finding what sites have multiple oak species
 nrow(sites[sites$n.spp>1,]) #125 sites have 2 or more species observed (that's great!)
@@ -78,10 +81,22 @@ nrow(sites[sites$n.spp>1,]) #125 sites have 2 or more species observed (that's g
 #    (using Daymet so we get day length & not just tmean)
 # ------------------------------------------------------------------------------------------------------
 source("functions/extract_Daymet.R")
-download.Daymet(outfolder="data/Daymet_Quercus", start_date="1980-01-01", end_date="2015-12-31", 
-                site_id=sites$SiteID[1:10], lat.in=sites$Latitude[1:10], lon.in=sites$Longitude[1:10],
-                vars=c("dayl", "prcp", "srad", "swe", "tmax", "tmin", "vp"),
-                overwrite = T, verbose = FALSE) 
+
+site.bins <- seq(21, nrow(sites), by=10)
+for(i in 1:length(site.bins)){
+	if(i<length(site.bins)){
+		sites.now <- site.bins[i]:(site.bins[i+1]-1)
+	} else {
+		sites.now <- site.bins[i]:nrow(sites)
+	}
+	
+	print(paste(sites$SiteID[sites.now]))
+	
+	download.Daymet(outfolder="data/Daymet_Quercus", start_date="1980-01-01", end_date="2015-12-31", 
+    	            site_id=sites$SiteID[sites.now], lat.in=sites$Latitude[sites.now], lon.in=sites$Longitude[sites.now],
+        	        vars=c("dayl", "prcp", "srad", "swe", "tmax", "tmin", "vp"),
+            	    overwrite = T, verbose = FALSE) 
+} # end site bins
 # ------------------------------------------------------------------------------------------------------
 
 
