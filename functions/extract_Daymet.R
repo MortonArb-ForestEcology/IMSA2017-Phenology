@@ -122,9 +122,9 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
   # ---------------------------------------------------
   # Note: many of these don't actually have CF standards (like daylength and max/min temperature)
   var <- data.frame(DAP.name = c("tmax", "tmin", "prcp", "srad", "swe", "dayl", "vp"),
-                    CF.name = c("maximum_air_temperature", "minimum_air_temperature", "precipitation_depth", "surface_downwelling_shortwave_flux_in_air", "preciptiation_flux", "day_length", "water_vapor_partial_pressure_in_air"),
-                    DAP.units=c("C", "C", "mm/day", "W/m2", "kg/m2/day", "s", "Pa"),
-                    units = c("Kelvin", "K", "mm/s", "W/m2", "kg/m2/s", "s", "Pascal")
+                    CF.name = c("maximum_air_temperature", "minimum_air_temperature", "precipitation_flux", "surface_downwelling_shortwave_flux_in_air", "liquid_water_content_of_surface_snow", "day_length", "water_vapor_partial_pressure_in_air"),
+                    DAP.units=c("C", "C", "mm/day", "W/m2", "kg/m2", "s", "Pa"),
+                    units = c("K", "K", "kg/m2/s", "W/m2", "kg/m2", "s", "Pa")
                     )
 
   var <- var[var$DAP.name %in% vars,]
@@ -210,7 +210,7 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
                                                    missval = -999,
                                                    verbose = verbose)
           # Doing unit conversions
-          if(var$units[j]=="Kelvin") dat.list[[paste(site_id[k])]][[j]] <- dat.list[[paste(site_id[k])]][[j]]+273.15
+          if(var$units[j] %in% c("Kelvin", "K")) dat.list[[paste(site_id[k])]][[j]] <- dat.list[[paste(site_id[k])]][[j]]+273.15
           if(var$units[j] %in% c("mm/s", "kg/m2/s")) dat.list[[paste(site_id[k])]][[j]] <- dat.list[[paste(site_id[k])]][[j]]/(60*60*24)
           
           pb.index=pb.index+1 # advance our status bar   
@@ -234,7 +234,7 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
                                    verbose = verbose
                                    )
         # Doing unit conversions
-        if(var$units[j]=="Kelvin") dat.list[[j]] <- dat.list[[j]]+273.15
+        if(var$units[j] %in% c("Kelvin", "K")) dat.list[[j]] <- dat.list[[j]]+273.15
         if(var$units[j] %in% c("mm/s", "kg/m2/s")) dat.list[[j]] <- dat.list[[j]]/(60*60*24)
         
         pb.index=pb.index+1 # advance our status bar   
