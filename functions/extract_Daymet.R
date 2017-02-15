@@ -166,8 +166,8 @@ download.Daymet <- function(outfolder, start_date, end_date, site_id=NULL, lat.i
   }
 
   # Making a progress bar
-  pb <- txtProgressBar(min=1, max=length(site_id)*rows*nrow(var), style=3)
   pb.index=1
+  pb <- txtProgressBar(min=1, max=length(site_id)*rows*nrow(var), style=3)
   
   for (i in seq_len(rows)) {
     year <- ylist[i]
