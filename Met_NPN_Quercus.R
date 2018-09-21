@@ -86,9 +86,16 @@ sites <- sites[order(sites$SiteID),]
 # head(sites)
 # summary(sites)
 
+site.bins <- seq(191, nrow(sites), by=10)
+i=1
+sites.now <- site.bins[i]:(site.bins[i+1]-1)
+download.Daymet(outfolder="data/Daymet_Quercus", start_date="1980-01-01", end_date="2015-12-31", 
+    	          site_id=sites$SiteID[sites.now], lat.in=sites$Latitude[sites.now], lon.in=sites$Longitude[sites.now],
+        	      vars=c("dayl", "prcp", "srad", "swe", "tmax", "tmin", "vp"),
+            	  overwrite = T, verbose = FALSE) 
 
-site.bins <- seq(1, nrow(sites), by=10)
-for(i in 1:length(site.bins)){
+# site.bins <- seq(191, nrow(sites), by=10)
+for(i in 6:length(site.bins)){
 	if(i<length(site.bins)){ 
 		sites.now <- site.bins[i]:(site.bins[i+1]-1)
 	} else {
